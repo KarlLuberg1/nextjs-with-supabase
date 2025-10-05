@@ -2,6 +2,7 @@
 
 import { createClient } from "@/lib/supabase/client";
 import { useEffect, useState } from "react";
+import { createNoteServer, deleteNoteServer } from "./serverside";
 
 export default function Page() {
   const [notes, setNotes] = useState<any[] | null>(null);
@@ -19,20 +20,19 @@ export default function Page() {
 
   const addNote = async (e: React.FormEvent) => {
     e.preventDefault();
-    const { data, error } = await supabase
-      .from("notes")
-      .insert([{ title, content }])
-      .select();
-    if (error) console.error(error);
-    else if (data) setNotes((prev) => [...(prev ?? []), ...data]);
+    const data = await createNoteServer(title, content);
+    setNotes((prev) => [...(prev ?? []), ...(data ?? [])]);
     setTitle("");
+    setContent("");
+    // if (error) console.error(error);
+    // else if (data) setNotes((prev) => [...(prev ?? []), ...data]);
+    // setTitle("");
     setContent("");
   };
 
   const deleteNote = async (id: number) => {
-    const { error } = await supabase.from("notes").delete().eq("id", id);
-    if (error) console.error(error);
-    else setNotes((prev) => prev?.filter((note) => note.id !== id) ?? null);
+    await deleteNoteServer(id);
+    setNotes((prev) => prev?.filter((note) => note.id !== id) ?? null);
   };
 
   return (
