@@ -4,8 +4,14 @@ import { createClient } from "@/lib/supabase/client";
 import { useEffect, useState } from "react";
 import { createNoteServer, deleteNoteServer } from "./serverside";
 
+interface Note {
+  id: number;
+  title: string;
+  content: string;
+}
+
 export default function Page() {
-  const [notes, setNotes] = useState<any[] | null>(null);
+  const [notes, setNotes] = useState<Note[] | null>(null);
   const supabase = createClient();
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
