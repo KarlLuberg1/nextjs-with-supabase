@@ -6,6 +6,7 @@ import {
   createTodoServer,
   deleteTodoServer,
   toggleTodoCompleteServer,
+  updateTodoServer,
 } from "./serverside";
 
 export default function TodoPage() {
@@ -39,6 +40,17 @@ export default function TodoPage() {
     setTodos((prev) => [...(prev ?? []), ...(data ?? [])]);
     setTitle("");
     setContent("");
+  };
+
+  const updateTodo = async (
+    id: number,
+    newTitle: string,
+    newContent: string
+  ) => {
+    const data = await updateTodoServer(id, newTitle, newContent);
+    if (data?.length) {
+      setTodos((prev) => prev?.map((t) => (t.id === id ? data[0] : t)) ?? null);
+    }
   };
 
   const deleteTodo = async (id: number) => {
@@ -111,6 +123,17 @@ export default function TodoPage() {
               className="text-red-600 hover:underline"
             >
               Delete
+            </button>
+            <button
+              onClick={async () => {
+                const newTitle = prompt("Enter new title:", todo.title);
+                const newContent = prompt("Enter new content:", todo.content);
+                if (newTitle !== null && newContent !== null)
+                  await updateTodo(todo.id, newTitle, newContent);
+              }}
+              className="text-blue-600"
+            >
+              Update
             </button>
           </div>
         ))}

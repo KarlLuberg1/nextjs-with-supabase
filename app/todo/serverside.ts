@@ -29,6 +29,20 @@ export async function createTodoServer(title: string, content: string) {
   return data;
 }
 
+export async function updateTodoServer(
+  id: number,
+  title: string,
+  content: string
+) {
+  const supabase = getServerClient();
+  const { data } = await supabase
+    .from("todos")
+    .update({ title, content })
+    .eq("id", id)
+    .select("*");
+  return data;
+}
+
 export async function deleteTodoServer(id: number) {
   const supabase = getServerClient();
   const { error } = await supabase.from("todos").delete().eq("id", id);
