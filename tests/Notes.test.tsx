@@ -3,13 +3,13 @@ import { vi } from "vitest";
 import Page from "../app/notes/page";
 import * as server from "../app/notes/serverside";
 
-vi.mock("@/lib/supabase/client", () => ({
-  createClient: vi.fn(() => ({
-    from: vi.fn(() => ({
-      select: vi.fn().mockResolvedValue({ data: [] }),
-    })),
-  })),
-}));
+// vi.mock("@/lib/supabase/client", () => ({
+//   createClient: vi.fn(() => ({
+//     from: vi.fn(() => ({
+//       select: vi.fn().mockResolvedValue({ data: [] }),
+//     })),
+//   })),
+// }));
 
 vi.mock("../app/notes/serverside", () => ({
   createNoteServer: vi.fn(),
