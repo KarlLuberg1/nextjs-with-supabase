@@ -33,6 +33,20 @@ export async function createNoteServer(title: string, content: string) {
   return data;
 }
 
+export async function updateNoteServer(
+  id: number,
+  title: string,
+  content: string
+) {
+  const supabase = getServerClient();
+  const { data } = await supabase
+    .from("todos")
+    .update({ title, content })
+    .eq("id", id)
+    .select("*");
+  return data;
+}
+
 export async function deleteNoteServer(id: number) {
   const supabase = getServerClient();
 

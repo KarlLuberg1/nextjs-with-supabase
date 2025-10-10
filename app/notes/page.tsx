@@ -2,7 +2,11 @@
 
 import { createClient } from "@/lib/supabase/client";
 import { useEffect, useState } from "react";
-import { createNoteServer, deleteNoteServer } from "./serverside";
+import {
+  createNoteServer,
+  deleteNoteServer,
+  updateNoteServer,
+} from "./serverside";
 
 interface Note {
   id: number;
@@ -12,6 +16,7 @@ interface Note {
 
 export default function Page() {
   const [notes, setNotes] = useState<Note[] | null>(null);
+
   const supabase = createClient();
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
@@ -34,6 +39,17 @@ export default function Page() {
     // else if (data) setNotes((prev) => [...(prev ?? []), ...data]);
     // setTitle("");
     setContent("");
+  };
+
+  const updateNote = async (
+    id: number,
+    newTitle: string,
+    newContent: string
+  ) => {
+    const data = await updateNoteServer(id, newTitle, newContent);
+    if (data?.length) {
+      setNotes((prev) => prev?.map((t) => (t.id === id ? data[0] : t)) ?? null);
+    }
   };
 
   const deleteNote = async (id: number) => {
@@ -81,6 +97,17 @@ export default function Page() {
               className="text-red-600 hover:underline"
             >
               Delete
+            </button>
+            <button
+              onClick={async () => {
+                const newTitle = prompt("Enter new title:", note.title);
+                const newContent = prompt("Enter new content:", note.content);
+                if (newTitle !== null && newContent !== null)
+                  await updateNote(note.id, newTitle, newContent);
+              }}
+              className="text-blue-600"
+            >
+              Update
             </button>
           </div>
         ))}

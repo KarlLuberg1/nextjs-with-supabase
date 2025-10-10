@@ -20,5 +20,3 @@ export async function DELETE() {
   const supabase = createAdminClient();
   return NextResponse.json({ message: "DELETE successful!" });
 }
-
-
